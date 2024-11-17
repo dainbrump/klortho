@@ -4,7 +4,6 @@ use std::fs;
 //use std::io::Write;
 use std::collections::HashMap;
 use serde_json::{json, Value};
-
 use ssh_host_config::SSHHostConfig;
 
 fn process_config_file(file_path: &str, groups: &mut HashMap<String, Vec<Value>>, current_group: &mut String) -> Result<(), Box<dyn std::error::Error>> {

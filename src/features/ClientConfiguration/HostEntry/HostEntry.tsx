@@ -1,11 +1,23 @@
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@klortho/components/ui/card";
 import { SSHHostRecord } from "@klortho/types";
 
-const HostEntry = ({ record }: {record:SSHHostRecord}) => {
+function HostEntry({ record }: {record:SSHHostRecord}) {
   return (
-    <div>
-      <h1>{record.Host}</h1>
-      <p>Host Entry content</p>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          <span>Host: {record.Host}</span>
+          <CardDescription>HostName: {record.HostName}</CardDescription>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p>User: {record.User}</p>
+        <p>ProxyCommand: {record.ProxyCommand}</p>
+        <p>RemoteCommand: {record.RemoteCommand}</p>
+        <p>Tunnel: {record.Tunnel}</p>
+        {/* <code>{JSON.stringify(record)}</code> */}
+      </CardContent>
+    </Card>
   );
 }
 

@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    bun_react_tauri_lib::run()
+    klortho_lib::run()
 }
