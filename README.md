@@ -35,6 +35,8 @@
 
 ## :dart: About
 
+First and foremost, this is 100% a personal project for me to learn more about Tauri and Rust. I am also learning more about React, TailwindCSS and ShadCN among many other things. This is a "stretch" project - something much bigger than the typical Todo App - for me to learn from. At the end of this, I do want to have a fully functional and useful desktop application that will work for my purposes at the very least. If it becomes something bigger, then cool. So use at your own risk or learn along with me.
+
 Klortho is named after the "keymaster" character from the original Ghostbusters movie. It started as, and currently is, part experiment and part necessary tool. I spelled it with a "K" to 1) avoid copyright/trademark drama; and 2) I'm a KDE user and we always name things starting with "K". (I use Arch, btw)
 
 There are many tutorials and other tools to assist users with managing ssh server configurations and client configurations. I've used them all and like them just fine. In my previous job and in my personal life, I manage a lot more servers, EC2 instances, Raspberry Pis, etc than I probably should. As a result, my `.ssh` directory gets quite messy and sometimes out of date. Then it becomes an ordeal to clean up settings and make sure everything still works. While I have no problems using a command line editor to make the changes, I've gotten kind of lazy about such maintenance tasks in my old-age and prefer a simple GUI for things like this. Plus, I've spent the past 20+ years working in web application development and wanted to try my hand at something a little bit different. Thus, Klortho was born.
@@ -47,11 +49,48 @@ The goals for Klortho are:
 
 ## :sparkles: Features
 
-There are no currently finished / usable features at the moment. Klortho is very much a work in progress.
+There are no currently finished / usable features at the moment. Klortho is very much a work in progress. Here is a list of features / functions that are currently in progress or completed.
+
+1. Manage SSH Client Configurations
+
+- [ ] Load existing configurations
+  - [x] Support "Include" statements when parsing the configurations.
+  - [x] Support most, if not all, SSH client configuration options.
+  - [?] Organize Host blocks by sensible groupings. I.e., group all Host blocks by file, sort them in order as rules _could_ cascade from one Host block into another.
+  - [ ] When an "Include" is parsed, be sure to identify the filename that was included and group accordingly.
+- [ ] Create new configurations
+  - [ ] Support creating "Include" files.
+  - [ ] Support logical grouping through the use of custom configuration comment tags.
+  - [ ] Allow user to save configuration file(s) - "Include" files also - to any location the user has write access to.
+  - [ ] When saving files, ensure that the proper permissions are applied.
+- [ ] Update "in-place" existing configurations
+  - [ ] Similar to load and create, must support "Include" files.
+  - [ ] Ideally, updates will be atomic - change just the portion that needs to be changed. To begin with I will probably end up just rewriting the entire output.
+
+2. Manage SSH Server Configurations
+
+- [ ] Load existing configurations
+- [ ] Create new configurations
+- [ ] Update "in-place" existing configurations
+
+3. Manage private / public keys
+
+- [ ] Create new keys form
+- [ ] Rename / move keys in the filesystem
+- [ ] Maintain a "library" of available keys for use in SSH Client and Server configuration forms.
+
+4. Miscellaneous "quality of life" features
+
+- [ ] UI consistency
+  - [x] Use system light / dark mode preference regardless of DE.
+  - [x] Fetch basic colors from active KDE theme and apply to the CSS.
+  - [ ] Fetch basic colors from active Gnome/GTK theme and apply to the CSS.
+- [ ] OS support
+  - [x] Linux
+  - [ ] Windows
+  - [ ] Mac
 
 <!-- :heavy_check_mark: Feature 1;\ -->
-<!-- :heavy_check_mark: Feature 2;\ -->
-<!-- :heavy_check_mark: Feature 3; -->
 
 ## :rocket: Technologies
 

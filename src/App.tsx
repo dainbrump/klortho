@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ClientConfigurationPage, ServerConfigurationPage, KeyManagementPage, WelcomePage } from "@klortho/features";
 import { AppSidebar, ThemeProvider } from "@klortho/components";
 import { SidebarProvider } from "@klortho/components/ui/sidebar";
+import { Toaster } from "@klortho/components/ui/toaster";
 import { useState, useEffect } from 'react';
 import { invoke } from "@tauri-apps/api/core";
 import "./index.css";
@@ -59,6 +60,7 @@ function App() {
           </main>
         </SidebarProvider>
       </BrowserRouter>
+      <Toaster />
     </ThemeProvider>
   );
 }

@@ -1,27 +1,30 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { SSHHostRecord } from '@klortho/types';
-import { invoke } from '@tauri-apps/api/core';
 import HostEntry from './HostEntry/HostEntry';
+import OpenSshConfigCard from './components/OpenSshConfigCard';
+import CreateSshConfigCard from './components/CreateSshConfigCard';
 
 function ClientConfigurationPage () {
   const [hosts, setHosts] = useState<{[key: string]: SSHHostRecord[]}>({});
+  
+  const [selectedFile, setSelectedFile] = useState<string | null>(null);
 
-  async function loadConfig() {
-    const filepath = '~/Projects/dainbrump/ssh-samples/config';
-    const host_data: {[key: string]: SSHHostRecord[]} = JSON.parse(await invoke('load_config', { filepath }));
-    setHosts(host_data);
+  const loadConfig = async (loaded: {filename: string, configdata:{[key: string]: SSHHostRecord[]}}) => {
+    setSelectedFile(loaded.filename);
+    setHosts(loaded.configdata);
   }
-
-  useEffect(() => {
-    loadConfig()
-  }, []);
 
   return (
     <div className="klortho-feature">
-      {Object.keys(hosts).map((group_name, idx) => (
+      {!selectedFile ? (
+        <div className="grid grid-cols-2 gap-4 py-4">
+          <OpenSshConfigCard onLoadConfig={loadConfig} />
+          <CreateSshConfigCard onLoadConfig={loadConfig} />
+        </div>
+      ) : Object.keys(hosts).map((group_name, idx) => (
         <div className="flex flex-col" key={idx}>
           <h2>{group_name}</h2>
-          <div className="grid grid-cols-3 gap-4 py-4 flex flex-col" key={idx}>
+          <div className="grid grid-cols-3 gap-4 py-4" key={idx}>
             {hosts[group_name].map((host, index) => (
               <HostEntry key={index} record={host} />
             ))}

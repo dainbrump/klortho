@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
-pub struct SSHHostConfig {
+pub struct SshHostRecord {
     #[serde(rename = "Host")]
     pub host: String,
     #[serde(rename = "Match")]
@@ -194,7 +194,7 @@ pub struct SSHHostConfig {
     pub x_auth_location: Option<String>,
 }
 
-impl SSHHostConfig {
+impl SshHostRecord {
     pub fn new() -> Self {
         Self {
             host: "".to_string(),
@@ -291,7 +291,7 @@ impl SSHHostConfig {
             user_known_hosts_file: None,
             verify_host_key_dns: None,
             visual_host_key: None,
-            x_auth_location: None
+            x_auth_location: None,
         }
     }
 
@@ -310,44 +310,55 @@ impl SSHHostConfig {
             "canonicalizefallbacklocal" => self.canonicalize_fallback_local = Some(value),
             "canonicalizehostname" => self.canonicalize_hostname = Some(value),
             "canonicalizemaxdots" => {
-              if let Ok(parsed_value) = value.parse::<u32>() {
-                self.canonicalize_max_dots = Some(parsed_value);
-              } else {
-                eprintln!("Error: Could not parse {} as u32 for CanonicalizeMaxDots", value);
-              }
-            },
+                if let Ok(parsed_value) = value.parse::<u32>() {
+                    self.canonicalize_max_dots = Some(parsed_value);
+                } else {
+                    eprintln!(
+                        "Error: Could not parse {} as u32 for CanonicalizeMaxDots",
+                        value
+                    );
+                }
+            }
             "canonicalizepermitted_cnames" => self.canonicalize_permitted_cnames = Some(value),
             "casignaturealgorithms" => self.ca_signature_algorithms = Some(value),
             "certificatefile" => self.certificate_file = Some(value),
-            "challengeresponseauthentication" => self.challenge_response_authentication = Some(value),
+            "challengeresponseauthentication" => {
+                self.challenge_response_authentication = Some(value)
+            }
             "checkhostip" => self.check_host_ip = Some(value),
             "ciphers" => {
-              let values: Vec<String> = value.split(' ').map(|s| s.trim().to_string()).collect();
-              self.ciphers = Some(values);
-            },
+                let values: Vec<String> = value.split(' ').map(|s| s.trim().to_string()).collect();
+                self.ciphers = Some(values);
+            }
             "clearallforwardings" => self.clear_all_forwardings = Some(value),
             "compression" => self.compression = Some(value),
             "compressionlevel" => {
-              if let Ok(parsed_value) = value.parse::<u32>() {
-                self.compression_level = Some(parsed_value);
-              } else {
-                eprintln!("Error: Could not parse {} as u32 for CompressionLevel", value);
-              }
-            },
+                if let Ok(parsed_value) = value.parse::<u32>() {
+                    self.compression_level = Some(parsed_value);
+                } else {
+                    eprintln!(
+                        "Error: Could not parse {} as u32 for CompressionLevel",
+                        value
+                    );
+                }
+            }
             "connectionattempts" => {
-              if let Ok(parsed_value) = value.parse::<u32>() {
-                self.connection_attempts = Some(parsed_value);
-              } else {
-                eprintln!("Error: Could not parse {} as u32 for ConnectionAttempts", value);
-              }
-            },
+                if let Ok(parsed_value) = value.parse::<u32>() {
+                    self.connection_attempts = Some(parsed_value);
+                } else {
+                    eprintln!(
+                        "Error: Could not parse {} as u32 for ConnectionAttempts",
+                        value
+                    );
+                }
+            }
             "connecttimeout" => {
-              if let Ok(parsed_value) = value.parse::<u32>() {
-                self.connect_timeout = Some(parsed_value);
-              } else {
-                eprintln!("Error: Could not parse {} as u32 for ConnectTimeout", value);
-              }
-            },
+                if let Ok(parsed_value) = value.parse::<u32>() {
+                    self.connect_timeout = Some(parsed_value);
+                } else {
+                    eprintln!("Error: Could not parse {} as u32 for ConnectTimeout", value);
+                }
+            }
             "controlmaster" => self.control_master = Some(value),
             "controlpath" => self.control_path = Some(value),
             "controlpersist" => self.control_persist = Some(value),
@@ -359,12 +370,15 @@ impl SSHHostConfig {
             "forwardagent" => self.forward_agent = Some(value),
             "forwardx11" => self.forward_x11 = Some(value),
             "forwardx11timeout" => {
-              if let Ok(parsed_value) = value.parse::<u32>() {
-                self.forward_x11_timeout = Some(parsed_value);
-              } else {
-                eprintln!("Error: Could not parse {} as u32 for ForwardX11Timeout", value);
-              }
-            },
+                if let Ok(parsed_value) = value.parse::<u32>() {
+                    self.forward_x11_timeout = Some(parsed_value);
+                } else {
+                    eprintln!(
+                        "Error: Could not parse {} as u32 for ForwardX11Timeout",
+                        value
+                    );
+                }
+            }
             "forwardx11trusted" => self.forward_x11_trusted = Some(value),
             "gatewayports" => self.gateway_ports = Some(value),
             "globalknownhostsfile" => self.global_known_hosts_file = Some(value),
@@ -378,9 +392,9 @@ impl SSHHostConfig {
             "hostbasedauthentication" => self.hostbased_authentication = Some(value),
             "hostbasedkeytypes" => self.hostbased_key_types = Some(value),
             "hostkeyalgorithms" => {
-              let values: Vec<String> = value.split(' ').map(|s| s.trim().to_string()).collect();
-              self.host_key_algorithms = Some(values);
-            },
+                let values: Vec<String> = value.split(' ').map(|s| s.trim().to_string()).collect();
+                self.host_key_algorithms = Some(values);
+            }
             "hostkeyalias" => self.host_key_alias = Some(value),
             "identitiesonly" => self.identities_only = Some(value),
             "identityagent" => self.identity_agent = Some(value),
@@ -394,28 +408,33 @@ impl SSHHostConfig {
             "localforward" => self.local_forward = Some(value),
             "loglevel" => self.log_level = Some(value),
             "macs" => {
-              let values: Vec<String> = value.split(' ').map(|s| s.trim().to_string()).collect();
-              self.macs = Some(values);
-            },
-            "nohostauthenticationforlocalhost" => self.no_host_authentication_for_localhost = Some(value),
+                let values: Vec<String> = value.split(' ').map(|s| s.trim().to_string()).collect();
+                self.macs = Some(values);
+            }
+            "nohostauthenticationforlocalhost" => {
+                self.no_host_authentication_for_localhost = Some(value)
+            }
             "numberofpasswordprompts" => {
-              if let Ok(parsed_value) = value.parse::<u32>() {
-                self.number_of_password_prompts = Some(parsed_value);
-              } else {
-                eprintln!("Error: Could not parse {} as u32 for NumberOfPasswordPrompts", value);
-              }
-            },
+                if let Ok(parsed_value) = value.parse::<u32>() {
+                    self.number_of_password_prompts = Some(parsed_value);
+                } else {
+                    eprintln!(
+                        "Error: Could not parse {} as u32 for NumberOfPasswordPrompts",
+                        value
+                    );
+                }
+            }
             "passwordauthentication" => self.password_authentication = Some(value),
             "permitlocal_command" => self.permit_local_command = Some(value),
             "permitremoteopen" => self.permit_remote_open = Some(value),
             "pkcs11provider" => self.pkcs11_provider = Some(value),
             "port" => {
-              if let Ok(parsed_value) = value.parse::<u32>() {
-                self.port = Some(parsed_value);
-              } else {
-                eprintln!("Error: Could not parse {} as u32 for Port", value);
-              }
-            },
+                if let Ok(parsed_value) = value.parse::<u32>() {
+                    self.port = Some(parsed_value);
+                } else {
+                    eprintln!("Error: Could not parse {} as u32 for Port", value);
+                }
+            }
             "preferredauthentications" => self.preferred_authentications = Some(value),
             "proxycommand" => self.proxy_command = Some(value),
             "proxyjump" => self.proxy_jump = Some(value),
@@ -429,19 +448,25 @@ impl SSHHostConfig {
             "revokedhostkeys" => self.revoked_host_keys = Some(value),
             "sendenv" => self.send_env = Some(value),
             "serveralivecountmax" => {
-              if let Ok(parsed_value) = value.parse::<u32>() {
-                self.server_alive_count_max = Some(parsed_value);
-              } else {
-                eprintln!("Error: Could not parse {} as u32 for ServerAliveCountMax", value);
-              }
-            },
+                if let Ok(parsed_value) = value.parse::<u32>() {
+                    self.server_alive_count_max = Some(parsed_value);
+                } else {
+                    eprintln!(
+                        "Error: Could not parse {} as u32 for ServerAliveCountMax",
+                        value
+                    );
+                }
+            }
             "serveraliveinterval" => {
-              if let Ok(parsed_value) = value.parse::<u32>() {
-                self.server_alive_interval = Some(parsed_value);
-              } else {
-                eprintln!("Error: Could not parse {} as u32 for ServerAliveInterval", value);
-              }
-            },
+                if let Ok(parsed_value) = value.parse::<u32>() {
+                    self.server_alive_interval = Some(parsed_value);
+                } else {
+                    eprintln!(
+                        "Error: Could not parse {} as u32 for ServerAliveInterval",
+                        value
+                    );
+                }
+            }
             "streamlocalbindmask" => self.stream_local_bind_mask = Some(value),
             "streamlocalbindunlink" => self.stream_local_bind_unlink = Some(value),
             "stricthostkeychecking" => self.strict_host_key_checking = Some(value),
