@@ -1,56 +1,40 @@
-
-import { KeySquare, ServerCog, MonitorCog } from "lucide-react";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@klortho/components/ui/sidebar";
+import { Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@klortho/components/ui/sidebar";
+import { Avatar, AvatarImage } from "@klortho/components/ui/avatar";
 import { Link } from "react-router-dom";
-
-const items = [
-  {
-    title: "Client Configuration",
-    url: "/client",
-    icon: MonitorCog,
-  },
-  {
-    title: "Server Configuration",
-    url: "/server",
-    icon: ServerCog,
-  },
-  {
-    title: "Key Manager",
-    url: "/key",
-    icon: KeySquare,
-  }
-]
+import { AppFeatures } from "./app-features";
+import { KlorthoFeature, KlorthoFeatureMap } from "@klortho/features";
 
 export function AppSidebar() {
+  const sidebarFeaturesOnly = KlorthoFeatureMap.filter((feature: KlorthoFeature) => {
+    if (feature.sidebar) {
+      if (feature.items && feature.items.length) {
+        feature.items.filter((item) => item.sidebar);
+      }
+      return feature;
+    }
+  });
+
   return (
     <Sidebar>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Link to="/">
+                <Avatar className="h-8 w-8 rounded-lg">
+                  <AvatarImage src="/klortho.png" alt="Klortho" />
+                </Avatar>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">Klortho</span>
+                  <span className="truncate text-xs">Easy SSH Management</span>
+                </div>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel><Link to="/">Klortho</Link></SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link to={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <AppFeatures features={sidebarFeaturesOnly} />
       </SidebarContent>
     </Sidebar>
   )

@@ -87,7 +87,7 @@
     @apply text-3xl font-bold;
   }
 
-  .klortho-feature {
-    @apply container mx-auto px-4 py-4;
+  .klortho-feature-page {
+    @apply flex min-h-[100vh] flex-1 flex-col gap-4 px-4 py-4;
   }
 }

@@ -4,7 +4,7 @@ import HostEntry from './HostEntry/HostEntry';
 import OpenSshConfigCard from './components/OpenSshConfigCard';
 import CreateSshConfigCard from './components/CreateSshConfigCard';
 
-function ClientConfigurationPage () {
+function NewClientConfPage () {
   const [hosts, setHosts] = useState<{[key: string]: SSHHostRecord[]}>({});
   
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
@@ -15,7 +15,7 @@ function ClientConfigurationPage () {
   }
 
   return (
-    <div className="klortho-feature">
+    <div className="klortho-feature-page">
       {!selectedFile ? (
         <div className="grid grid-cols-2 gap-4 py-4">
           <OpenSshConfigCard onLoadConfig={loadConfig} />
@@ -35,4 +35,4 @@ function ClientConfigurationPage () {
   );
 }
 
-export default ClientConfigurationPage;
+export default NewClientConfPage;

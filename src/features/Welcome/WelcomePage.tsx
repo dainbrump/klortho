@@ -5,7 +5,7 @@ import { KeySquare, ServerCog, MonitorCog } from "lucide-react"
 
 function WelcomePage () {
   return (
-    <div className="klortho-feature">
+    <div className="klortho-feature-page">
       <h1>Welcome to Klortho</h1>
       <div className="grid grid-cols-3 gap-4 py-4">
         <Card>

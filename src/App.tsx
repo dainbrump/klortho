@@ -1,14 +1,14 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ClientConfigurationPage, ServerConfigurationPage, KeyManagementPage, WelcomePage } from "@klortho/features";
 import { AppSidebar, ThemeProvider } from "@klortho/components";
-import { SidebarProvider } from "@klortho/components/ui/sidebar";
+import { SidebarProvider, SidebarInset } from "@klortho/components/ui/sidebar";
 import { Toaster } from "@klortho/components/ui/toaster";
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { invoke } from "@tauri-apps/api/core";
+import { KlorthoFeatureMap, KlorthoFeature } from "@klortho/features";
 import "./index.css";
 
 function App() {
-  const shutReactRouterUp = {
+  const silenceRRDomWarnings = {
     v7_startTransition: true,
     v7_fetcherPersist: true,
     v7_normalizeFormMethod: true,
@@ -17,15 +17,12 @@ function App() {
     v7_skipActionErrorRevalidation: true
   };
 
-  const [themeData, setThemeData] = useState<{[key: string]: string} | null>(null);
-
   async function loadTheme() {
     // Currently, the app uses the default colors in the index.css unless it is
     // running under KDE. Then it will use the colors from the KDE theme.
     // Otherwise, the ThemeProvider will use the default colors based on the system
     // color mode (dark or light) as  defined in the index.css file.
     const data: { [key: string]: string } = JSON.parse(await invoke('fetch_theme'));
-    setThemeData(data);
     // Inject CSS variables
     if (data) {
       const style = document.documentElement.style;
@@ -44,20 +41,27 @@ function App() {
     loadTheme();
   }, []);
 
+  const approutes: KlorthoFeature[] = KlorthoFeatureMap.reduce((_flat: KlorthoFeature[], route) => {
+    let _T:KlorthoFeature[] = [];
+    if (route.items && route.items.length > 0) {
+      _T = _T.concat(route.items.filter((item: KlorthoFeature) => item.path !== undefined && item.component !== undefined));
+    }
+    if (route.path !== undefined && route.component !== undefined) {
+      _T = _T.concat([route]);
+    }
+    return _flat.concat(_T);
+  }, []);
 
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <BrowserRouter future={shutReactRouterUp}>
+      <BrowserRouter future={silenceRRDomWarnings}>
         <SidebarProvider>
           <AppSidebar />
-          <main className='flex flex-col'>
+          <SidebarInset>
             <Routes>
-              <Route path="/" element={<WelcomePage />} />
-              <Route path="/client" element={<ClientConfigurationPage />} />
-              <Route path="/server" element={<ServerConfigurationPage />} />
-              <Route path="/key" element={<KeyManagementPage />} />
+              {approutes.map((route) => <Route key={route.path} path={route.path} Component={route.component} />)}
             </Routes>
-          </main>
+          </SidebarInset>
         </SidebarProvider>
       </BrowserRouter>
       <Toaster />
