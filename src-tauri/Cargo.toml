@@ -25,3 +25,8 @@ serde_json = "1"
 shellexpand = "3.1.0"
 palette = "0.6"
 tauri-plugin-dialog = "2"
+ssh_config_parser = { path = "src/ssh_config_parser" }
+sshd_config_parser = { path = "src/sshd_config_parser" }
+
+[workspace]
+members = ["src/ssh_config_parser", "src/sshd_config_parser"]

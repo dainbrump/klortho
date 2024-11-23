@@ -1,20 +1,6 @@
-mod ssh_config;
 mod theme_fetcher;
-use ssh_config::{load_file,save_file};
+use ssh_config_parser::{load_file, save_file};
 use theme_fetcher::get_kde_theme;
-
-// Tarui command to feature map
-// SSH Client features:
-// 'T_load_client_config' - Load SSH client configuration from file(s)
-// 'T_save_client_config' - Save SSH client configuration to file(s)
-// SSH Server features:
-// 'T_load_server_config' - Load SSH server configuration from file(s)
-// 'T_save_server_config' - Save SSH server configuration to file(s)
-// Key Management features:
-// 'T_generate' - Generate a new SSH key pair
-// 'T_import' - Import an existing SSH key pair
-// UI features:
-// 'fetch_theme' - Fetch the current DE theme colors
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
@@ -46,7 +32,11 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
-        .invoke_handler(tauri::generate_handler![fetch_theme, load_client_config, save_client_config])
+        .invoke_handler(tauri::generate_handler![
+            fetch_theme,
+            load_client_config,
+            save_client_config
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

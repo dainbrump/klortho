@@ -1,10 +1,10 @@
-pub mod ssh_host_record;
+pub mod host_record;
+use host_record::HostRecord;
 
+use serde_json::{json, Value};
+use std::collections::HashMap;
 use std::fs;
 use std::io::Write;
-use serde_json::{json, Value};
-use ssh_host_record::SshHostRecord;
-use std::collections::HashMap;
 
 fn process_config_file(
     file_path: &str,
@@ -12,7 +12,7 @@ fn process_config_file(
     current_group: &mut String,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let contents = fs::read_to_string(file_path)?;
-    let mut current_obj = SshHostRecord::new();
+    let mut current_obj = HostRecord::new();
 
     for line in contents.lines() {
         let line = line.trim();
@@ -31,7 +31,7 @@ fn process_config_file(
                         .push(json!(current_obj));
                 }
                 *current_group = new_group;
-                current_obj = SshHostRecord::new();
+                current_obj = HostRecord::new();
             }
         } else if line.starts_with('#') || line.is_empty() {
             continue;
@@ -52,7 +52,7 @@ fn process_config_file(
                     .or_insert_with(Vec::new)
                     .push(json!(current_obj));
             }
-            current_obj = SshHostRecord::new();
+            current_obj = HostRecord::new();
             current_obj.set_property("Host", line.trim_start_matches("Host ").trim().to_string());
         } else if !current_obj.host.is_empty() {
             let parts: Vec<&str> = line.split_whitespace().collect();
@@ -86,8 +86,11 @@ pub fn load_file(file_path: &str) -> Result<String, Box<dyn std::error::Error>> 
     Ok(json_string)
 }
 
-pub fn save_file(json: String, output_file_path: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let json_data: HashMap<String, Vec<SshHostRecord>> = match serde_json::from_str(&json) {
+pub fn save_file(
+    json: String,
+    output_file_path: &str,
+) -> Result<String, Box<dyn std::error::Error>> {
+    let json_data: HashMap<String, Vec<HostRecord>> = match serde_json::from_str(&json) {
         Ok(data) => data,
         Err(e) => return Err(format!("Failed to parse JSON: {}", e).into()),
     };
@@ -97,7 +100,7 @@ pub fn save_file(json: String, output_file_path: &str) -> Result<String, Box<dyn
         writeln!(output_file, "#@ {} @#", group)?;
         for host_config in hosts {
             writeln!(output_file, "Host {}", host_config.host)?;
-            if let Some(hostname) = &host_config.hostname {
+            if let Some(hostname) = &host_config.host_name {
                 writeln!(output_file, "\tHostname {}", hostname)?;
             }
             if let Some(identity_file) = &host_config.identity_file {

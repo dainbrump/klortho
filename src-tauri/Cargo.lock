@@ -1805,6 +1805,8 @@ dependencies = [
  "serde",
  "serde_json",
  "shellexpand",
+ "ssh_config_parser",
+ "sshd_config_parser",
  "tauri",
  "tauri-build",
  "tauri-plugin-dialog",
@@ -3343,6 +3345,24 @@ dependencies = [
  "gobject-sys",
  "libc",
  "system-deps",
+]
+
+[[package]]
+name = "ssh_config_parser"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "shellexpand",
+]
+
+[[package]]
+name = "sshd_config_parser"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "shellexpand",
 ]
 
 [[package]]
