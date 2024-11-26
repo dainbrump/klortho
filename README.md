@@ -53,11 +53,11 @@ There are no currently finished / usable features at the moment. Klortho is very
 
 1. Manage SSH Client Configurations
 
-- [ ] Load existing configurations
+- [x] Load existing configurations
   - [x] Support "Include" statements when parsing the configurations.
-  - [x] Support most, if not all, SSH client configuration options.
-  - [?] Organize Host blocks by sensible groupings. I.e., group all Host blocks by file, sort them in order as rules _could_ cascade from one Host block into another.
-  - [ ] When an "Include" is parsed, be sure to identify the filename that was included and group accordingly.
+  - [x] Support SSH client configuration parameters defined in the man page for ssh.
+  - [x] Organize Host blocks by sensible groupings. I.e., group all Host blocks by file, sort them in order as rules _could_ cascade from one Host block into another.
+  - [x] When an "Include" is parsed, be sure to identify the filename that was included and group accordingly.
 - [ ] Create new configurations
   - [ ] Support creating "Include" files.
   - [ ] Support logical grouping through the use of custom configuration comment tags.

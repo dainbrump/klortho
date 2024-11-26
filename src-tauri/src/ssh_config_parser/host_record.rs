@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
@@ -69,6 +70,7 @@ pub enum TunnelOptions {
 /// For more information, see <https://linux.die.net/man/5/ssh_config>
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
 pub struct HostRecord {
     /// ## Host
     ///
@@ -80,43 +82,39 @@ pub struct HostRecord {
     ///
     /// See **PATTERNS** in <https://linux.die.net/man/5/ssh_config> for
     /// more information on patterns.
-    #[serde(rename = "Host")]
     pub host: String,
     /// ## AddressFamily
     ///
     /// Specifies which address family to use when connecting. Valid arguments are `any`, `inet`
     /// (use IPv4 only), or `inet6` (use IPv6 only).
-    #[serde(rename = "AddressFamily", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub address_family: Option<AddressFamily>,
     /// ## BatchMode
     ///
     /// If set to `yes`, passphrase/password querying will be disabled. This option is useful in
     /// cripts and other batch jobs where no user is present to supply the password. The argument
     /// must be `yes` or `no`. The default is `no`.
-    #[serde(rename = "BatchMode", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub batch_mode: Option<YesNo>,
     /// ## BindAddress
     ///
     /// Use the specified address on the local machine as the source address of the connection.
     /// Only useful on systems with more than one address. Note that this option does not work if
     /// **UsePrivilegedPort** is set to `yes`.
-    #[serde(rename = "BindAddress", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bind_address: Option<String>,
     /// ## ChallengeResponseAuthentication
     ///
     /// Specifies whether to use challenge-response authentication. The argument to this keyword
     /// must be `yes` or `no`. The default is `yes`.
-    #[serde(
-        rename = "ChallengeResponseAuthentication",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub challenge_response_authentication: Option<YesNo>,
     /// ## CheckHostIP
     ///
     /// If this flag is set to `yes`, **ssh(1)** will additionally check the host IP address in the
     /// known_hosts file. This allows ssh to detect if a host key changed due to DNS spoofing. If
     /// the option is set to `no`, the check will not be executed. The default is `yes`.
-    #[serde(rename = "CheckHostIP", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub check_host_ip: Option<YesNo>,
     /// ## Cipher
     ///
@@ -125,7 +123,7 @@ pub struct HostRecord {
     /// client for interoperability with legacy protocol 1 implementations that do not support the
     /// `3des` cipher. Its use is strongly discouraged due to cryptographic weaknesses. The default
     /// is `3des`.
-    #[serde(rename = "Cipher", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cipher: Option<String>,
     /// ## Ciphers
     ///
@@ -138,7 +136,7 @@ pub struct HostRecord {
     /// aes128-ctr,aes192-ctr,aes256-ctr,arcfour256,arcfour128,aes128-cbc,3des-cbc,blowfish-cbc,
     /// cast128-cbc,aes192-cbc,aes256-cbc,arcfour
     /// `
-    #[serde(rename = "Ciphers", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ciphers: Option<String>,
     /// ## ClearAllForwardings
     ///
@@ -147,16 +145,13 @@ pub struct HostRecord {
     /// used from the **ssh(1)** command line to clear port forwardings set in configuration files,
     /// and is automatically set by **scp(1)** and **sftp(1)**. The argument must be `yes` or `no`.
     /// The default is `no`.
-    #[serde(
-        rename = "ClearAllForwardings",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub clear_all_forwardings: Option<YesNo>,
     /// ## Compression
     ///
     /// Specifies whether to use compression. The argument must be `yes` or `no`. The default is
     /// `no`.
-    #[serde(rename = "Compression", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub compression: Option<YesNo>,
     /// ## CompressionLevel
     ///
@@ -164,21 +159,21 @@ pub struct HostRecord {
     /// integer from 1 (fast) to 9 (slow, best). The default level is 6, which is good for most
     /// applications. The meaning of the values is the same as in **gzip(1)**. Note that this
     /// option applies to protocol version 1 only.
-    #[serde(rename = "CompressionLevel", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub compression_level: Option<u32>,
     /// ## ConnectionAttempts
     ///
     /// Specifies the number of tries (one per second) to make before exiting. The argument must be
     /// an integer. This may be useful in scripts if the connection sometimes fails. The default is
     /// 1.
-    #[serde(rename = "ConnectionAttempts", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub connection_attempts: Option<u32>,
     /// ## ConnectTimeout
     ///
     /// Specifies the timeout (in seconds) used when connecting to the SSH server, instead of using
     /// the default system TCP timeout. This value is used only when the target is down or really
     /// unreachable, not when it refuses the connection.
-    #[serde(rename = "ConnectTimeout", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub connect_timeout: Option<u32>,
     /// ## ControlMaster
     ///
@@ -199,7 +194,7 @@ pub struct HostRecord {
     /// Two additional options allow for opportunistic multiplexing: try to use a master connection
     /// but fall back to creating a new one if one does not already exist. These options are:
     /// `auto` and `autoask`. The latter requires confirmation like the `ask` option.
-    #[serde(rename = "ControlMaster", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub control_master: Option<YesNoAskAutoAutoask>,
     /// ## ControlPath
     ///
@@ -209,7 +204,7 @@ pub struct HostRecord {
     /// target host name, `%p` the port, and `%r` by the remote login username. It is recommended
     /// that any **ControlPath** used for opportunistic connection sharing include at least `%h`,
     /// `%p`, and `%r`. This ensures that shared connections are uniquely identified.
-    #[serde(rename = "ControlPath", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub control_path: Option<String>,
     /// ## DynamicForward
     ///
@@ -228,7 +223,7 @@ pub struct HostRecord {
     /// Currently the SOCKS4 and SOCKS5 protocols are supported, and **ssh(1)** will act as a SOCKS
     /// server. Multiple forwardings may be specified, and additional forwardings can be given on
     /// the command line. Only the superuser can forward privileged ports.
-    #[serde(rename = "DynamicForward", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dynamic_forward: Option<String>,
     /// ## EnableSSHKeysign
     ///
@@ -236,7 +231,7 @@ pub struct HostRecord {
     /// enables the use of the helper program **ssh-keysign(8)** during **HostbasedAuthentication**.
     /// The argument must be `yes` or `no`. The default is `no`. This option should be placed in
     /// the non-hostspecific section. See **ssh-keysign(8)** for more information.
-    #[serde(rename = "EnableSSHKeysign", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub enable_ssh_keysign: Option<YesNo>,
     /// ## EscapeChar
     ///
@@ -244,17 +239,14 @@ pub struct HostRecord {
     /// command line. The argument should be a single character, `^` followed by a letter, or
     /// `none` to disable the escape character entirely (making the connection transparent for
     /// binary data).
-    #[serde(rename = "EscapeChar", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub escape_char: Option<String>,
     /// ## ExitOnForwardFailure
     ///
     /// Specifies whether **ssh(1)** should terminate the connection if it cannot set up all
     /// requested dynamic, tunnel, local, and remote port forwardings. The argument must be `yes`
     /// or `no`. The default is `no`.
-    #[serde(
-        rename = "ExitOnForwardFailure",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub exit_on_forward_failure: Option<YesNo>,
     /// ## ForwardAgent
     ///
@@ -266,7 +258,7 @@ pub struct HostRecord {
     /// agent through the forwarded connection. An attacker cannot obtain key material from the
     /// agent, however they can perform operations on the keys that enable them to authenticate
     /// using the identities loaded into the agent.
-    #[serde(rename = "ForwardAgent", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub forward_agent: Option<YesNo>,
     /// ## ForwardX11
     ///
@@ -277,7 +269,7 @@ pub struct HostRecord {
     /// permissions on the remote host (for the user's X11 authorization database) can access the
     /// local X11 display through the forwarded connection. An attacker may then be able to perform
     /// activities such as keystroke monitoring if the **ForwardX11Trusted** option is also enabled.
-    #[serde(rename = "ForwardX11", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub forward_x11: Option<YesNo>,
     /// ## ForwardX11Trusted
     ///
@@ -293,7 +285,7 @@ pub struct HostRecord {
     ///
     /// See the X11 SECURITY extension specification for full details on the restrictions imposed
     /// on untrusted clients.
-    #[serde(rename = "ForwardX11Trusted", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub forward_x11_trusted: Option<YesNo>,
     /// ## GatewayPorts
     ///
@@ -302,60 +294,45 @@ pub struct HostRecord {
     /// hosts from connecting to forwarded ports. **GatewayPorts** can be used to specify that ssh
     /// should bind local port forwardings to the wildcard address, thus allowing remote hosts to
     /// connect to forwarded ports. The argument must be `yes` or `no`. The default is `no`.
-    #[serde(rename = "GatewayPorts", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub gateway_ports: Option<YesNo>,
     /// ## GlobalKnownHostsFile
     ///
     /// Specifies a file to use for the global host key database instead of
     /// `/etc/ssh/ssh_known_hosts`.
-    #[serde(
-        rename = "GlobalKnownHostsFile",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub global_known_hosts_file: Option<String>,
     /// ## GSSAPIAuthentication
     ///
     /// Specifies whether user authentication based on GSSAPI is allowed. The default is `no`. Note
     /// that this option applies to protocol version 2 only.
-    #[serde(
-        rename = "GSSAPIAuthentication",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub gssapi_authentication: Option<YesNo>,
     /// ## GSSAPIKeyExchange
     ///
     /// Specifies whether key exchange based on GSSAPI may be used. When using GSSAPI key exchange
     /// the server need not have a host key. The default is `no`. Note that this option applies to
     /// protocol version 2 only.
-    #[serde(rename = "GSSAPIKeyExchange", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub gssapi_key_exchange: Option<YesNo>,
     /// ## GSSAPIClientIdentity
     ///
     /// If set, specifies the GSSAPI client identity that ssh should use when connecting to the
     /// server. The default is unset, which means that the default identity will be used.
-    #[serde(
-        rename = "GSSAPIClientIdentity",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub gssapi_client_identity: Option<String>,
     /// ## GSSAPIDelegateCredentials
     ///
     /// Forward (delegate) credentials to the server. The default is `no`. Note that this option
     /// applies to protocol version 2 connections using GSSAPI.
-    #[serde(
-        rename = "GSSAPIDelegateCredentials",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub gssapi_delegate_credentials: Option<YesNo>,
     /// ## GSSAPIRenewalForcesRekey
     ///
     /// If set to `yes` then renewal of the client's GSSAPI credentials will force the rekeying of
     /// the ssh connection. With a compatible server, this can delegate the renewed credentials to
     /// a session on the server. The default is `no`.
-    #[serde(
-        rename = "GSSAPIRenewalForcesRekey",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub gssapi_renewal_forces_rekey: Option<YesNo>,
     /// ## GSSAPITrustDns
     ///
@@ -363,7 +340,7 @@ pub struct HostRecord {
     /// host being connected to. If `no`, the hostname entered on the command line will be passed
     /// untouched to the GSSAPI library. The default is `no`. This option only applies to protocol
     /// version 2 connections using GSSAPI.
-    #[serde(rename = "GSSAPITrustDns", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub gssapi_trust_dns: Option<YesNo>,
     /// ## HashKnownHosts
     ///
@@ -372,37 +349,34 @@ pub struct HostRecord {
     /// but they do not reveal identifying information should the file's contents be disclosed. The
     /// default is `no`. Note that existing names and addresses in known hosts files will not be
     /// converted automatically, but may be manually hashed using **ssh-keygen(1)**.
-    #[serde(rename = "HashKnownHosts", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub hash_known_hosts: Option<YesNo>,
     /// ## HostbasedAuthentication
     ///
     /// Specifies whether to try rhosts based authentication with public key authentication. The
     /// argument must be `yes` or `no`. The default is `no`. This option applies to protocol
     /// version 2 only and is similar to **RhostsRSAAuthentication**.
-    #[serde(
-        rename = "HostbasedAuthentication",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub hostbased_authentication: Option<YesNo>,
     /// ## HostKeyAlgorithms
     ///
     /// Specifies the protocol version 2 host key algorithms that the client wants to use in order
     /// of preference. The default for this option is: `ssh-rsa,ssh-dss`.
-    #[serde(rename = "HostKeyAlgorithms", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub host_key_algorithms: Option<String>,
     /// ## HostKeyAlias
     ///
     /// Specifies an alias that should be used instead of the real host name when looking up or
     /// saving the host key in the host key database files. This option is useful for tunneling SSH
     /// connections or for multiple servers running on a single host.
-    #[serde(rename = "HostKeyAlias", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub host_key_alias: Option<String>,
     /// ## HostName
     ///
     /// Specifies the real host name to log into. This can be used to specify nicknames or
     /// abbreviations for hosts. The default is the name given on the command line. Numeric IP
     /// addresses are also permitted (both on the command line and in **HostName** specifications).
-    #[serde(rename = "HostName", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub host_name: Option<String>,
     /// ## IdentitiesOnly
     ///
@@ -410,7 +384,7 @@ pub struct HostRecord {
     /// the ssh_config files, even if **ssh-agent(1)** offers more identities. The argument to this
     /// keyword must be `yes` or `no`. This option is intended for situations where ssh-agent
     /// offers many different identities. The default is `no`.
-    #[serde(rename = "IdentitiesOnly", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub identities_only: Option<YesNo>,
     /// ## IdentityFile
     ///
@@ -429,7 +403,7 @@ pub struct HostRecord {
     ///
     /// It is possible to have multiple identity files specified in configuration files; all these
     /// identities will be tried in sequence.
-    #[serde(rename = "IdentityFile", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub identity_file: Option<String>,
     /// ## Include
     ///
@@ -439,16 +413,13 @@ pub struct HostRecord {
     /// configuration directives will not be applied until after the **Include** configuration file
     /// has been processed. The **Include** directive may appear inside a **Match** or **Host**
     /// block to perform conditional inclusion.
-    #[serde(rename = "Include", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     /// ## KbdInteractiveAuthentication
     ///
     /// Specifies whether to use keyboard-interactive authentication. The argument to this keyword
     /// must be `yes` or `no`. The default is `yes`.
-    #[serde(
-        rename = "KbdInteractiveAuthentication",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub kbd_interactive_authentication: Option<YesNo>,
     /// ## KbdInteractiveDevices
     ///
@@ -456,10 +427,7 @@ pub struct HostRecord {
     /// method names must be comma-separated. The default is to use the server specified list. The
     /// methods available vary depending on what the server supports. For an OpenSSH server, it may
     /// be zero or more of: `bsdauth`, `pam`, and `skey`.
-    #[serde(
-        rename = "KbdInteractiveDevices",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub kbd_interactive_devices: Option<String>,
     /// ## LocalCommand
     ///
@@ -475,7 +443,7 @@ pub struct HostRecord {
     /// - `%u` (local user name)
     ///
     /// This directive is ignored unless **PermitLocalCommand** has been enabled.
-    #[serde(rename = "LocalCommand", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub local_command: Option<String>,
     /// ## LocalForward
     ///
@@ -491,7 +459,7 @@ pub struct HostRecord {
     /// connection to a specific address. The `bind_address` of 'localhost' indicates that the
     /// listening port be bound for local use only, while an empty address or `*` indicates that
     /// the port should be available from all interfaces.
-    #[serde(rename = "LocalForward", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub local_forward: Option<String>,
     /// ## LogLevel
     ///
@@ -499,7 +467,7 @@ pub struct HostRecord {
     /// values are: `QUIET`, `FATAL`, `ERROR`, `INFO`, `VERBOSE`, `DEBUG`, `DEBUG1`, `DEBUG2`, and
     /// `DEBUG3`. The default is `INFO`. `DEBUG` and `DEBUG1` are equivalent. `DEBUG2` and `DEBUG3`
     /// each specify higher levels of verbose output.
-    #[serde(rename = "LogLevel", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub log_level: Option<LogLevels>,
     /// ## MACs
     ///
@@ -508,7 +476,7 @@ pub struct HostRecord {
     /// must be comma-separated. The default is:
     ///
     /// `hmac-md5,hmac-sha1,umac-64@openssh.com, hmac-ripemd160,hmac-sha1-96,hmac-md5-96`
-    #[serde(rename = "MACs", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub macs: Option<String>,
     /// ## NoHostAuthenticationForLocalhost
     ///
@@ -517,40 +485,31 @@ pub struct HostRecord {
     /// many warnings about changed host keys. However, this option disables host authentication
     /// for localhost. The argument to this keyword must be `yes` or `no`. The default is to check
     /// the host key for localhost.
-    #[serde(
-        rename = "NoHostAuthenticationForLocalhost",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub no_host_authentication_for_localhost: Option<YesNo>,
     /// ## NumberOfPasswordPrompts
     ///
     /// Specifies the number of password prompts before giving up. The argument to this keyword
     /// must be an integer. The default is 3.
-    #[serde(
-        rename = "NumberOfPasswordPrompts",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub number_of_password_prompts: Option<u32>,
     /// ## PasswordAuthentication
     ///
     /// Specifies whether to use password authentication. The argument to this keyword must be
     /// `yes` or `no`. The default is `yes`.
-    #[serde(
-        rename = "PasswordAuthentication",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub password_authentication: Option<YesNo>,
     /// ## PermitLocalCommand
     ///
     /// Allow local command execution via the **LocalCommand** option or using the
     /// **!**<em>command</em> escape sequence in **ssh(1)**. The argument must be `yes` or `no`.
     /// The default is `no`.
-    #[serde(rename = "PermitLocalCommand", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub permit_local_command: Option<YesNo>,
     /// ## Port
     ///
     /// Specifies the port number to connect on the remote host. The default is 22.
-    #[serde(rename = "Port", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub port: Option<u32>,
     /// ## PreferredAuthentications
     ///
@@ -559,10 +518,7 @@ pub struct HostRecord {
     /// (e.g. password) The default for this option is:
     ///
     /// `gssapi-with-mic, hostbased, publickey, keyboard-interactive, password`.
-    #[serde(
-        rename = "PreferredAuthentications",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub preferred_authentications: Option<String>,
     /// ## Protocol
     ///
@@ -570,7 +526,7 @@ pub struct HostRecord {
     /// possible values are `1` and `2`. Multiple versions must be comma-separated. The default is
     /// `2,1`. This means that ssh tries version 2 and falls back to version 1 if version 2 is not
     /// available.
-    #[serde(rename = "Protocol", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub protocol: Option<String>,
     /// ## ProxyCommand
     ///
@@ -588,16 +544,13 @@ pub struct HostRecord {
     /// the following directive would connect via an HTTP proxy at 192.0.2.0:
     ///
     /// `ProxyCommand /usr/bin/nc -X connect -x 192.0.2.0:8080 %h %p`
-    #[serde(rename = "ProxyCommand", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub proxy_command: Option<String>,
     /// ## PubkeyAuthentication
     ///
     /// Specifies whether to try public key authentication. The argument to this keyword must be
     /// `yes` or `no`. The default is `yes`. This option applies to protocol version 2 only.
-    #[serde(
-        rename = "PubkeyAuthentication",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pubkey_authentication: Option<YesNo>,
     /// ## RekeyLimit
     ///
@@ -605,7 +558,7 @@ pub struct HostRecord {
     /// renegotiated. The argument is the number of bytes, with an optional suffix of `K`, `M`, or
     /// `G` to indicate Kilobytes, Megabytes, or Gigabytes, respectively. The default is between
     /// `1G` and `4G`, depending on the cipher. This option applies to protocol version 2 only.
-    #[serde(rename = "RekeyLimit", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rekey_limit: Option<String>,
     /// ## RemoteForward
     ///
@@ -624,25 +577,22 @@ pub struct HostRecord {
     /// If  the `bind_address` is `*` or an empty string, then the forwarding is requested to
     /// listen on  all interfaces. Specifying a remote `bind_address` will only succeed if the
     /// server's **GatewayPorts** option is enabled (see **sshd_config(5)**).
-    #[serde(rename = "RemoteForward", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub remote_forward: Option<String>,
     /// ## RHostsRSAAuthentication
     ///
     /// Specifies whether to try rhosts based authentication with RSA host authentication. The
     /// argument must be `yes` or `no`. The default is `no`. This option applies to protocol
     /// version 1 only and requires **ssh(1)** to be setuid root.
-    #[serde(
-        rename = "RhostsRSAAuthentication",
-        skip_serializing_if = "Option::is_none"
-    )]
-    pub rhosts_rsa_authentication: Option<YesNo>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub r_hosts_rsa_authentication: Option<YesNo>,
     /// ## RSAAuthentication
     ///
     /// Specifies whether to try RSA authentication. The argument to this keyword must be `yes` or
     /// `no`. RSA authentication will only be attempted if the identity file exists, or an
     /// authentication agent is running. The default is `yes`. Note that this option applies to
     /// protocol version 1 only.
-    #[serde(rename = "RSAAuthentication", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rsa_authentication: Option<YesNo>,
     /// ## SendEnv
     ///
@@ -655,7 +605,7 @@ pub struct HostRecord {
     /// default is not to send any environment variables.
     ///
     /// See **PATTERNS** for more information on patterns.
-    #[serde(rename = "SendEnv", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub send_env: Option<String>,
     /// ## ServerAliveCountMax
     ///
@@ -672,10 +622,7 @@ pub struct HostRecord {
     /// and **ServerAliveCountMax** is left at the default, if the server becomes unresponsive, ssh
     /// will disconnect after approximately 45 seconds. This option applies to protocol version 2
     /// only.
-    #[serde(
-        rename = "ServerAliveCountMax",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub server_alive_count_max: Option<u32>,
     /// ## ServerAliveInterval
     ///
@@ -683,17 +630,14 @@ pub struct HostRecord {
     /// server, **ssh(1)** will send a message through the encrypted channel to request a response
     /// from the server. The default is 0, indicating that these messages will not be sent to the
     /// server. This option applies to protocol version 2 only.
-    #[serde(
-        rename = "ServerAliveInterval",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub server_alive_interval: Option<u32>,
     /// ## SmartcardDevice
     ///
     /// Specifies which smartcard device to use. The argument to this keyword is the device
     /// **ssh(1)** should use to communicate with a smartcard used for storing the user's private
     /// RSA key. By default, no device is specified and smartcard support is not activated.
-    #[serde(rename = "SmartcardDevice", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub smartcard_device: Option<String>,
     /// ## StrictHostKeyChecking
     ///
@@ -708,10 +652,7 @@ pub struct HostRecord {
     /// refuse to connect to hosts whose host key has changed. The host keys of known hosts will be
     /// verified automatically in all cases. The argument must be `yes`, `no`, or `ask`. The
     /// default is `ask`.
-    #[serde(
-        rename = "StrictHostKeyChecking",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub strict_host_key_checking: Option<YesNoAsk>,
     /// ## TCPKeepAlive
     ///
@@ -723,14 +664,14 @@ pub struct HostRecord {
     /// The default is `yes` (to send TCP keepalive messages), and the client will notice if the
     /// network goes down or the remote host dies. This is important in scripts, and many users
     /// want it too. To disable TCP keepalive messages, the value should be set to `no`.
-    #[serde(rename = "TCPKeepAlive", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tcp_keep_alive: Option<YesNo>,
     /// ## Tunnel
     ///
     /// Request **tun(4)** device forwarding between the client and the server. The argument must
     /// be `yes`, `point-to-point` (layer 3), `ethernet` (layer 2), or `no`. Specifying `yes`
     /// requests the default tunnel mode, which is `point-to-point`. The default is `no`.
-    #[serde(rename = "Tunnel", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tunnel: Option<TunnelOptions>,
     /// ## TunnelDevice
     ///
@@ -738,26 +679,26 @@ pub struct HostRecord {
     /// (`remote_tun`). The argument must be `local_tun[:remote_tun]`. The devices may be specified
     /// by numerical ID or the keyword `any`, which uses the next available tunnel device. If
     /// `remote_tun` is not specified, it defaults to `any`. The default is `any:any`.
-    #[serde(rename = "TunnelDevice", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tunnel_device: Option<String>,
     /// ## UsePrivilegedPort
     ///
     /// Specifies whether to use a privileged port for outgoing connections. The argument must be
     /// `yes` or `no`. The default is `no`. If set to `yes`, **ssh(1)** must be setuid root. Note
     /// that this option must be set to `yes` for **RhostsRSAAuthentication** with older servers.
-    #[serde(rename = "UsePrivilegedPort", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub use_privileged_port: Option<YesNo>,
     /// ## User
     ///
     /// Specifies the user to log in as. This can be useful when a different user name is used on
     /// different machines. This saves the trouble of having to remember to give the user name on
     /// the command line.
-    #[serde(rename = "User", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user: Option<String>,
     /// ## UserKnownHostsFile
     ///
     /// Specifies a file to use for the user host key database instead of `~/.ssh/known_hosts`.
-    #[serde(rename = "UserKnownHostsFile", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user_known_hosts_file: Option<String>,
     /// ## VerifyHostKeyDNS
     ///
@@ -770,7 +711,7 @@ pub struct HostRecord {
     /// is `no`. Note that this option applies to protocol version 2 only.
     ///
     /// See also VERIFYING HOST KEYS in **ssh(1)**.
-    #[serde(rename = "VerifyHostKeyDNS", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub verify_host_key_dns: Option<YesNoAsk>,
     /// ## VisualHostKey
     ///
@@ -778,13 +719,20 @@ pub struct HostRecord {
     /// fingerprint is printed in addition to the hex fingerprint string at login and for unknown
     /// host keys. If this flag is set to `no`, no fingerprint strings are printed at login and
     /// only the hex fingerprint string will be printed for unknown host keys. The default is `no`.
-    #[serde(rename = "VisualHostKey", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub visual_host_key: Option<YesNo>,
     /// ## XAuthLocation
     ///
     /// Specifies the full pathname of the **xauth(1)** program. The default is `/usr/bin/xauth`.
-    #[serde(rename = "XAuthLocation", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub x_auth_location: Option<String>,
+    /// Unknown or potentially invalid configuration parameters.
+    ///
+    /// We don't want to lose any information, so we capture it here. This particular field is only
+    /// used when loading configuration data from file. The UI should not produce any data that does
+    /// not comply with the object structure.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub unknown: Option<HashMap<String, String>>,
 }
 
 impl HostRecord {
@@ -846,7 +794,7 @@ impl HostRecord {
             pubkey_authentication: None,
             rekey_limit: None,
             remote_forward: None,
-            rhosts_rsa_authentication: None,
+            r_hosts_rsa_authentication: None,
             rsa_authentication: None,
             send_env: None,
             server_alive_count_max: None,
@@ -862,37 +810,38 @@ impl HostRecord {
             verify_host_key_dns: None,
             visual_host_key: None,
             x_auth_location: None,
+            unknown: None,
         }
     }
 
     /// Set property values for the `HostRecord`.
-    pub fn set_property(&mut self, key: &str, value: String) {
+    pub fn set_property(&mut self, key: &str, value: &String) {
         match key.to_lowercase().as_str() {
-            "host" => self.host = value,
-            "bindaddress" => self.bind_address = Some(value),
-            "cipher" => self.cipher = Some(value),
-            "controlpath" => self.control_path = Some(value),
-            "dynamicforward" => self.dynamic_forward = Some(value),
-            "escapechar" => self.escape_char = Some(value),
-            "globalknownhostsfile" => self.global_known_hosts_file = Some(value),
-            "gssapiclientidentity" => self.gssapi_client_identity = Some(value),
-            "hostkeyalgorithms" => self.host_key_algorithms = Some(value),
-            "hostkeyalias" => self.host_key_alias = Some(value),
-            "hostname" => self.host_name = Some(value),
-            "identityfile" => self.identity_file = Some(value),
-            "include" => self.include = Some(value),
-            "localcommand" => self.local_command = Some(value),
-            "localforward" => self.local_forward = Some(value),
-            "preferredauthentications" => self.preferred_authentications = Some(value),
-            "proxycommand" => self.proxy_command = Some(value),
-            "rekeylimit" => self.rekey_limit = Some(value),
-            "remoteforward" => self.remote_forward = Some(value),
-            "sendenv" => self.send_env = Some(value),
-            "smartcarddevice" => self.smartcard_device = Some(value),
-            "tunneldevice" => self.tunnel_device = Some(value),
-            "user" => self.user = Some(value),
-            "userknownhostsfile" => self.user_known_hosts_file = Some(value),
-            "xauthlocation" => self.x_auth_location = Some(value),
+            "host" => self.host = value.to_string(),
+            "bindaddress" => self.bind_address = Some(value.to_string()),
+            "cipher" => self.cipher = Some(value.to_string()),
+            "controlpath" => self.control_path = Some(value.to_string()),
+            "dynamicforward" => self.dynamic_forward = Some(value.to_string()),
+            "escapechar" => self.escape_char = Some(value.to_string()),
+            "globalknownhostsfile" => self.global_known_hosts_file = Some(value.to_string()),
+            "gssapiclientidentity" => self.gssapi_client_identity = Some(value.to_string()),
+            "hostkeyalgorithms" => self.host_key_algorithms = Some(value.to_string()),
+            "hostkeyalias" => self.host_key_alias = Some(value.to_string()),
+            "hostname" => self.host_name = Some(value.to_string()),
+            "identityfile" => self.identity_file = Some(value.to_string()),
+            "include" => self.include = Some(value.to_string()),
+            "localcommand" => self.local_command = Some(value.to_string()),
+            "localforward" => self.local_forward = Some(value.to_string()),
+            "preferredauthentications" => self.preferred_authentications = Some(value.to_string()),
+            "proxycommand" => self.proxy_command = Some(value.to_string()),
+            "rekeylimit" => self.rekey_limit = Some(value.to_string()),
+            "remoteforward" => self.remote_forward = Some(value.to_string()),
+            "sendenv" => self.send_env = Some(value.to_string()),
+            "smartcarddevice" => self.smartcard_device = Some(value.to_string()),
+            "tunneldevice" => self.tunnel_device = Some(value.to_string()),
+            "user" => self.user = Some(value.to_string()),
+            "userknownhostsfile" => self.user_known_hosts_file = Some(value.to_string()),
+            "xauthlocation" => self.x_auth_location = Some(value.to_string()),
             // Handle fields that should have numeric values
             "compressionlevel" => {
                 if let Ok(parsed_value) = value.parse::<u32>() {
@@ -1173,8 +1122,8 @@ impl HostRecord {
                 }
             },
             "rhostsrsaauthentication" => match value.to_lowercase().as_str() {
-                "yes" => self.rhosts_rsa_authentication = Some(YesNo::Yes),
-                "no" => self.rhosts_rsa_authentication = Some(YesNo::No),
+                "yes" => self.r_hosts_rsa_authentication = Some(YesNo::Yes),
+                "no" => self.r_hosts_rsa_authentication = Some(YesNo::No),
                 _ => {
                     eprintln!("Invalid value for {}: {}", key.to_string(), value);
                 }
@@ -1249,7 +1198,17 @@ impl HostRecord {
                 let values: Vec<&str> = value.split(' ').collect();
                 self.protocol = Some(values.join(","));
             }
-            _ => {}
+            // Unspecified or invalid ssh config file parameter was found. The key does not match
+            // any known parameter or field. We'll store it here in case the user knows what to do
+            // with it.
+            _ => {
+                let mut unknowns: HashMap<String, String> = HashMap::new();
+                if self.unknown.is_some() {
+                    unknowns = self.unknown.clone().unwrap();
+                }
+                unknowns.insert(key.to_string(), value.to_string());
+                self.unknown = Some(unknowns);
+            }
         }
     }
 }

@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
-// Enumerator to support yes/no values in the SSH configuration file.
+/// Enumerator to support yes/no values in the configuration file.
 pub enum YesNo {
     Yes,
     No,
@@ -10,6 +10,7 @@ pub enum YesNo {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
+/// Enumerator to support yes/delayed/no values in the configuration file.
 pub enum YesNoDelayed {
     Yes,
     Delayed,
@@ -18,6 +19,7 @@ pub enum YesNoDelayed {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
+/// Enumerator to support yes/no/client-specified values in the configuration file.
 pub enum YesNoClientspecified {
     Yes,
     No,
@@ -26,6 +28,7 @@ pub enum YesNoClientspecified {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
+/// Enumerator to support yes/no/forced-commands-only values in the configuration file.
 pub enum RootLogin {
     Yes,
     WithoutPassword,
@@ -35,7 +38,7 @@ pub enum RootLogin {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "UPPERCASE")]
-// Enumerator specific to log levels
+/// Enumerator to support log levels in the configuration file.
 pub enum LogLevels {
     Quiet,
     Fatal,
@@ -50,7 +53,7 @@ pub enum LogLevels {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
-// Enumerator to support address family values in the SSH configuration file.
+/// Enumerator to support address family values in the configuration file.
 pub enum AddressFamily {
     Any,
     Inet,
@@ -59,7 +62,7 @@ pub enum AddressFamily {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "kebab-case")]
-// Enumerator to support tunnel values in the SSH configuration file.
+/// Enumerator to support tunnel options in the configuration file.
 pub enum TunnelOptions {
     Yes,
     PointToPoint,
@@ -842,4 +845,516 @@ pub struct ServerRecord {
     /// Specifies the full pathname of the **xauth(1)** program. The default is `/usr/bin/xauth`.
     #[serde(rename = "XAuthLocation", skip_serializing_if = "Option::is_none")]
     pub xauth_location: Option<String>,
+}
+
+impl ServerRecord {
+    /// Create a new `ServerRecord` with default values.
+    pub fn new() -> Self {
+        Self {
+            accept_env: None,
+            address_family: None,
+            allow_agent_forwarding: None,
+            allow_groups: None,
+            allow_tcp_forwarding: None,
+            allow_users: None,
+            authorized_keys_file: None,
+            banner: None,
+            challenge_response_authentication: None,
+            chroot_directory: None,
+            ciphers: None,
+            client_alive_count_max: None,
+            client_alive_interval: None,
+            compression: None,
+            deny_groups: None,
+            deny_users: None,
+            force_command: None,
+            gateway_ports: None,
+            gssapi_authentication: None,
+            gssapi_key_exchange: None,
+            gssapi_cleanup_credentials: None,
+            gssapi_strict_acceptor_check: None,
+            gssapi_store_credentials_on_rekey: None,
+            hostbased_authentication: None,
+            hostbased_uses_name_from_packet_only: None,
+            host_key: None,
+            ignore_rhosts: None,
+            ignore_user_known_hosts: None,
+            kerberos_authentication: None,
+            kerberos_get_afs_token: None,
+            kerberos_or_local_passwd: None,
+            kerberos_ticket_cleanup: None,
+            kerberos_use_kuserok: None,
+            key_regeneration_interval: None,
+            listen_address: None,
+            login_grace_time: None,
+            log_level: None,
+            macs: None,
+            match_: None,
+            max_auth_tries: None,
+            max_sessions: None,
+            max_startups: None,
+            password_authentication: None,
+            permit_empty_passwords: None,
+            permit_open: None,
+            permit_root_login: None,
+            permit_tunnel: None,
+            permit_user_environment: None,
+            pid_file: None,
+            port: None,
+            print_last_log: None,
+            print_motd: None,
+            protocol: None,
+            pubkey_authentication: None,
+            authorized_keys_command: None,
+            authorized_keys_command_run_as: None,
+            required_authentications1: None,
+            required_authentications2: None,
+            rhosts_rsa_authentication: None,
+            rsa_authentication: None,
+            server_key_bits: None,
+            show_patch_level: None,
+            strict_modes: None,
+            subsystem: None,
+            syslog_facility: None,
+            tcp_keep_alive: None,
+            use_dns: None,
+            use_login: None,
+            use_pam: None,
+            use_privilege_separation: None,
+            x11_display_offset: None,
+            x11_forwarding: None,
+            x11_use_localhost: None,
+            xauth_location: None,
+        }
+    }
+
+    pub fn set_property(&mut self, key: &str, value: String) {
+        match key.to_lowercase().as_str() {
+            "acceptenv" => self.accept_env = Some(value),
+            "allowgroups" => self.allow_groups = Some(value),
+            "allowusers" => self.allow_users = Some(value),
+            "authorizedkeysfile" => self.authorized_keys_file = Some(value),
+            "banner" => self.banner = Some(value),
+            "chrootdirectory" => self.chroot_directory = Some(value),
+            "ciphers" => self.ciphers = Some(value),
+            "denygroups" => self.deny_groups = Some(value),
+            "denyusers" => self.deny_users = Some(value),
+            "forcecommand" => self.force_command = Some(value),
+            "hostkey" => self.host_key = Some(value),
+            "listenaddress" => self.listen_address = Some(value),
+            "macs" => self.macs = Some(value),
+            "match" => self.match_ = Some(value),
+            "maxstartups" => self.max_startups = Some(value),
+            "permitopen" => self.permit_open = Some(value),
+            "pidfile" => self.pid_file = Some(value),
+            "protocol" => self.protocol = Some(value),
+            "authorizedkeyscommand" => self.authorized_keys_command = Some(value),
+            "authorizedkeyscommandrunas" => self.authorized_keys_command_run_as = Some(value),
+            "requiredauthentications1" => self.required_authentications1 = Some(value),
+            "requiredauthentications2" => self.required_authentications2 = Some(value),
+            "subsystem" => self.subsystem = Some(value),
+            "syslogfacility" => self.syslog_facility = Some(value),
+            "xauthlocation" => self.xauth_location = Some(value),
+            // Handle numeric value conversions
+            "clientalivecountmax" => {
+                if let Ok(parsed_value) = value.parse::<u32>() {
+                    self.client_alive_count_max = Some(parsed_value);
+                } else {
+                    eprintln!(
+                        "Error: Could not parse {} as u32 for {}",
+                        value,
+                        key.to_string()
+                    );
+                }
+            }
+            "clientaliveinterval" => {
+                if let Ok(parsed_value) = value.parse::<u32>() {
+                    self.client_alive_interval = Some(parsed_value);
+                } else {
+                    eprintln!(
+                        "Error: Could not parse {} as u32 for {}",
+                        value,
+                        key.to_string()
+                    );
+                }
+            }
+            "keyregenerationinterval" => {
+                if let Ok(parsed_value) = value.parse::<u32>() {
+                    self.key_regeneration_interval = Some(parsed_value);
+                } else {
+                    eprintln!(
+                        "Error: Could not parse {} as u32 for {}",
+                        value,
+                        key.to_string()
+                    );
+                }
+            }
+            "logingracetime" => {
+                if let Ok(parsed_value) = value.parse::<u32>() {
+                    self.login_grace_time = Some(parsed_value);
+                } else {
+                    eprintln!(
+                        "Error: Could not parse {} as u32 for {}",
+                        value,
+                        key.to_string()
+                    );
+                }
+            }
+            "maxauthtries" => {
+                if let Ok(parsed_value) = value.parse::<u32>() {
+                    self.max_auth_tries = Some(parsed_value);
+                } else {
+                    eprintln!(
+                        "Error: Could not parse {} as u32 for {}",
+                        value,
+                        key.to_string()
+                    );
+                }
+            }
+            "maxsessions" => {
+                if let Ok(parsed_value) = value.parse::<u32>() {
+                    self.max_sessions = Some(parsed_value);
+                } else {
+                    eprintln!(
+                        "Error: Could not parse {} as u32 for {}",
+                        value,
+                        key.to_string()
+                    );
+                }
+            }
+            "port" => {
+                if let Ok(parsed_value) = value.parse::<u32>() {
+                    self.port = Some(parsed_value);
+                } else {
+                    eprintln!(
+                        "Error: Could not parse {} as u32 for {}",
+                        value,
+                        key.to_string()
+                    );
+                }
+            }
+            "serverkeybits" => {
+                if let Ok(parsed_value) = value.parse::<u32>() {
+                    self.server_key_bits = Some(parsed_value);
+                } else {
+                    eprintln!(
+                        "Error: Could not parse {} as u32 for {}",
+                        value,
+                        key.to_string()
+                    );
+                }
+            }
+            "x11displayoffset" => {
+                if let Ok(parsed_value) = value.parse::<u32>() {
+                    self.x11_display_offset = Some(parsed_value);
+                } else {
+                    eprintln!(
+                        "Error: Could not parse {} as u32 for {}",
+                        value,
+                        key.to_string()
+                    );
+                }
+            }
+            // Handle enumerated values
+            "addressfamily" => match value.to_lowercase().as_str() {
+                "any" => self.address_family = Some(AddressFamily::Any),
+                "inet" => self.address_family = Some(AddressFamily::Inet),
+                "inet6" => self.address_family = Some(AddressFamily::Inet6),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "allowagentforwarding" => match value.to_lowercase().as_str() {
+                "yes" => self.allow_agent_forwarding = Some(YesNo::Yes),
+                "no" => self.allow_agent_forwarding = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "allowtcpforwarding" => match value.to_lowercase().as_str() {
+                "yes" => self.allow_tcp_forwarding = Some(YesNo::Yes),
+                "no" => self.allow_tcp_forwarding = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "challengeresponseauthentication" => match value.to_lowercase().as_str() {
+                "yes" => self.challenge_response_authentication = Some(YesNo::Yes),
+                "no" => self.challenge_response_authentication = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "compression" => match value.to_lowercase().as_str() {
+                "yes" => self.compression = Some(YesNoDelayed::Yes),
+                "no" => self.compression = Some(YesNoDelayed::No),
+                "delayed" => self.compression = Some(YesNoDelayed::Delayed),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "gatewayports" => match value.to_lowercase().as_str() {
+                "yes" => self.gateway_ports = Some(YesNoClientspecified::Yes),
+                "no" => self.gateway_ports = Some(YesNoClientspecified::No),
+                "clientspecified" => {
+                    self.gateway_ports = Some(YesNoClientspecified::Clientspecified)
+                }
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "gssapiauthentication" => match value.to_lowercase().as_str() {
+                "yes" => self.gssapi_authentication = Some(YesNo::Yes),
+                "no" => self.gssapi_authentication = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "gssapikeyexchange" => match value.to_lowercase().as_str() {
+                "yes" => self.gssapi_key_exchange = Some(YesNo::Yes),
+                "no" => self.gssapi_key_exchange = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "gssapicleanupcredentials" => match value.to_lowercase().as_str() {
+                "yes" => self.gssapi_cleanup_credentials = Some(YesNo::Yes),
+                "no" => self.gssapi_cleanup_credentials = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "gssapistrictacceptorcheck" => match value.to_lowercase().as_str() {
+                "yes" => self.gssapi_strict_acceptor_check = Some(YesNo::Yes),
+                "no" => self.gssapi_strict_acceptor_check = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "gssapistorecredentialsonrekey" => match value.to_lowercase().as_str() {
+                "yes" => self.gssapi_store_credentials_on_rekey = Some(YesNo::Yes),
+                "no" => self.gssapi_store_credentials_on_rekey = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "hostbasedauthentication" => match value.to_lowercase().as_str() {
+                "yes" => self.hostbased_authentication = Some(YesNo::Yes),
+                "no" => self.hostbased_authentication = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "hostbasedusesnamefrompacketonly" => match value.to_lowercase().as_str() {
+                "yes" => self.hostbased_uses_name_from_packet_only = Some(YesNo::Yes),
+                "no" => self.hostbased_uses_name_from_packet_only = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "ignorerhosts" => match value.to_lowercase().as_str() {
+                "yes" => self.ignore_rhosts = Some(YesNo::Yes),
+                "no" => self.ignore_rhosts = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "ignoreuserknownhosts" => match value.to_lowercase().as_str() {
+                "yes" => self.ignore_user_known_hosts = Some(YesNo::Yes),
+                "no" => self.ignore_user_known_hosts = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "kerberosauthentication" => match value.to_lowercase().as_str() {
+                "yes" => self.kerberos_authentication = Some(YesNo::Yes),
+                "no" => self.kerberos_authentication = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "kerberosgetafstoken" => match value.to_lowercase().as_str() {
+                "yes" => self.kerberos_get_afs_token = Some(YesNo::Yes),
+                "no" => self.kerberos_get_afs_token = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "kerberosorlocalpasswd" => match value.to_lowercase().as_str() {
+                "yes" => self.kerberos_or_local_passwd = Some(YesNo::Yes),
+                "no" => self.kerberos_or_local_passwd = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "kerberosticketcleanup" => match value.to_lowercase().as_str() {
+                "yes" => self.kerberos_ticket_cleanup = Some(YesNo::Yes),
+                "no" => self.kerberos_ticket_cleanup = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "kerberosusekuserok" => match value.to_lowercase().as_str() {
+                "yes" => self.kerberos_use_kuserok = Some(YesNo::Yes),
+                "no" => self.kerberos_use_kuserok = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "loglevel" => match value.to_lowercase().as_str() {
+                "quiet" => self.log_level = Some(LogLevels::Quiet),
+                "fatal" => self.log_level = Some(LogLevels::Fatal),
+                "error" => self.log_level = Some(LogLevels::Error),
+                "info" => self.log_level = Some(LogLevels::Info),
+                "verbose" => self.log_level = Some(LogLevels::Verbose),
+                "debug" => self.log_level = Some(LogLevels::Debug),
+                "debug1" => self.log_level = Some(LogLevels::Debug1),
+                "debug2" => self.log_level = Some(LogLevels::Debug2),
+                "debug3" => self.log_level = Some(LogLevels::Debug3),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "passwordauthentication" => match value.to_lowercase().as_str() {
+                "yes" => self.password_authentication = Some(YesNo::Yes),
+                "no" => self.password_authentication = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "permitemptypasswords" => match value.to_lowercase().as_str() {
+                "yes" => self.permit_empty_passwords = Some(YesNo::Yes),
+                "no" => self.permit_empty_passwords = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "permitrootlogin" => match value.to_lowercase().as_str() {
+                "yes" => self.permit_root_login = Some(RootLogin::Yes),
+                "without-password" => self.permit_root_login = Some(RootLogin::WithoutPassword),
+                "forced-commands-only" => {
+                    self.permit_root_login = Some(RootLogin::ForcedCommandsOnly)
+                }
+                "no" => self.permit_root_login = Some(RootLogin::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "permittunnel" => match value.to_lowercase().as_str() {
+                "yes" => self.permit_tunnel = Some(TunnelOptions::Yes),
+                "point-to-point" => self.permit_tunnel = Some(TunnelOptions::PointToPoint),
+                "ethernet" => self.permit_tunnel = Some(TunnelOptions::Ethernet),
+                "no" => self.permit_tunnel = Some(TunnelOptions::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "permituserenvironment" => match value.to_lowercase().as_str() {
+                "yes" => self.permit_user_environment = Some(YesNo::Yes),
+                "no" => self.permit_user_environment = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "printlastlog" => match value.to_lowercase().as_str() {
+                "yes" => self.print_last_log = Some(YesNo::Yes),
+                "no" => self.print_last_log = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "printmotd" => match value.to_lowercase().as_str() {
+                "yes" => self.print_motd = Some(YesNo::Yes),
+                "no" => self.print_motd = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "pubkeyauthentication" => match value.to_lowercase().as_str() {
+                "yes" => self.pubkey_authentication = Some(YesNo::Yes),
+                "no" => self.pubkey_authentication = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "rhostsrsaauthentication" => match value.to_lowercase().as_str() {
+                "yes" => self.rhosts_rsa_authentication = Some(YesNo::Yes),
+                "no" => self.rhosts_rsa_authentication = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "rsaauthentication" => match value.to_lowercase().as_str() {
+                "yes" => self.rsa_authentication = Some(YesNo::Yes),
+                "no" => self.rsa_authentication = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "showpatchlevel" => match value.to_lowercase().as_str() {
+                "yes" => self.show_patch_level = Some(YesNo::Yes),
+                "no" => self.show_patch_level = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "strictmodes" => match value.to_lowercase().as_str() {
+                "yes" => self.strict_modes = Some(YesNo::Yes),
+                "no" => self.strict_modes = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "tcpkeepalive" => match value.to_lowercase().as_str() {
+                "yes" => self.tcp_keep_alive = Some(YesNo::Yes),
+                "no" => self.tcp_keep_alive = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "usedns" => match value.to_lowercase().as_str() {
+                "yes" => self.use_dns = Some(YesNo::Yes),
+                "no" => self.use_dns = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "uselogin" => match value.to_lowercase().as_str() {
+                "yes" => self.use_login = Some(YesNo::Yes),
+                "no" => self.use_login = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "usepam" => match value.to_lowercase().as_str() {
+                "yes" => self.use_pam = Some(YesNo::Yes),
+                "no" => self.use_pam = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "useprivilegeseparation" => match value.to_lowercase().as_str() {
+                "yes" => self.use_privilege_separation = Some(YesNo::Yes),
+                "no" => self.use_privilege_separation = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "x11forwarding" => match value.to_lowercase().as_str() {
+                "yes" => self.x11_forwarding = Some(YesNo::Yes),
+                "no" => self.x11_forwarding = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            "x11uselocalhost" => match value.to_lowercase().as_str() {
+                "yes" => self.x11_use_localhost = Some(YesNo::Yes),
+                "no" => self.x11_use_localhost = Some(YesNo::No),
+                _ => {
+                    eprintln!("Invalid value for {}: {}", key.to_string(), value);
+                }
+            },
+            _ => {}
+        }
+    }
 }
