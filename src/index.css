@@ -88,6 +88,6 @@
   }
 
   .klortho-feature-page {
-    @apply flex min-h-[100vh] flex-1 flex-col gap-4 px-4 py-4;
+    @apply flex min-h-[100vh] flex-1 flex-col gap-4 px-4;
   }
 }

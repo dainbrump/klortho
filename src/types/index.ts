@@ -1,3 +1,4 @@
-import { ValidHostKeyAlgorithm, ValidHostEntryMAC, ValidHostEntryCiphers, SSHHostRecord } from './SSHHostRecord.d';
+import { ClientConfiguration, Nodes, HostNode, CommentNode, FileNode } from "./ClientConfiguration";
+import { HostRecord } from "./HostRecord";
 
-export type { ValidHostKeyAlgorithm, ValidHostEntryMAC, ValidHostEntryCiphers, SSHHostRecord };
+export type { ClientConfiguration, Nodes, HostNode, CommentNode, FileNode, HostRecord};
